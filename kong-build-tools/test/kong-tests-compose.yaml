@@ -5,15 +5,13 @@ services:
   kong-migrations:
     image: "${KONG_TEST_IMAGE_NAME:-kong:latest}"
     command: kong migrations bootstrap
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
       KONG_DATABASE: postgres
       KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
-      KONG_PG_HOST: db
-      KONG_PG_PASSWORD: ${KONG_PG_PASSWORD:-kong}
+      KONG_PG_HOST: ${KONG_PG_HOST}
+      KONG_PG_PORT: ${KONG_PG_PORT}
       KONG_PG_USER: ${KONG_PG_USER:-kong}
+      KONG_PG_PASSWORD: ${KONG_PG_PASSWORD}
       KONG_FIPS: ${KONG_FIPS:-off}
     restart: always
     networks:
@@ -22,15 +20,13 @@ services:
   kong-migrations-up:
     image: "${KONG_TEST_IMAGE_NAME:-kong:latest}"
     command: kong migrations up && kong migrations finish
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
       KONG_DATABASE: postgres
       KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
-      KONG_PG_HOST: db
-      KONG_PG_PASSWORD: ${KONG_PG_PASSWORD:-kong}
+      KONG_PG_HOST: ${KONG_PG_HOST}
+      KONG_PG_PORT: ${KONG_PG_PORT}
       KONG_PG_USER: ${KONG_PG_USER:-kong}
+      KONG_PG_PASSWORD: ${KONG_PG_PASSWORD}
       KONG_FIPS: ${KONG_FIPS:-off}
     restart: always
     networks:
@@ -40,9 +36,6 @@ services:
     image: "${KONG_TEST_IMAGE_NAME:-kong:latest}"
     user: "${KONG_USER:-kong}"
     container_name: "${KONG_TEST_CONTAINER_NAME:-kong-tests}"
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ERROR_LOG: /dev/stderr
@@ -53,9 +46,10 @@ services:
       KONG_CASSANDRA_CONTACT_POINTS: db
       KONG_DATABASE: postgres
       KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
-      KONG_PG_HOST: db
-      KONG_PG_PASSWORD: ${KONG_PG_PASSWORD:-kong}
+      KONG_PG_HOST: ${KONG_PG_HOST}
+      KONG_PG_PORT: ${KONG_PG_PORT}
       KONG_PG_USER: ${KONG_PG_USER:-kong}
+      KONG_PG_PASSWORD: ${KONG_PG_PASSWORD}
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
       KONG_PORTAL: "on"
@@ -81,26 +75,6 @@ services:
       - "127.0.0.1:8445:8445/tcp"
       - "127.0.0.1:8446:8446/tcp"
       - "127.0.0.1:8447:8447/tcp"
-
-  db:
-    image: postgres:13
-    ports:
-      - '5432:5432'
-    expose:
-      - 5432
-    environment:
-      POSTGRES_DB: ${KONG_PG_DATABASE:-kong}
-      POSTGRES_PASSWORD: ${KONG_PG_PASSWORD:-kong}
-      POSTGRES_USER: ${KONG_PG_USER:-kong}
-    stdin_open: true
-    tty: true
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${KONG_PG_USER:-kong}"]
-      interval: 5s
-      timeout: 10s
-      retries: 10
-    networks:
-      - kong-net
 
   mockbin:
     image: kennethreitz/httpbin
