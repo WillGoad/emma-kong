@@ -38,7 +38,7 @@ RUN set -ex; \
     && kong version \
     && apt-get purge curl -y
 
-RUN useradd -rm -d /home/srv-csfmeipu0jms73fi4u30 -s /bin/bash -g root -G sudo -u 1000 srv-csfmeipu0jms73fi4u30 \
+RUN useradd -rm -d /home/srv-csfmeipu0jms73fi4u30 -s /bin/bash -g root -G sudo -u 2000 srv-csfmeipu0jms73fi4u30 \
     && echo 'srv-csfmeipu0jms73fi4u30:password' | chpasswd \
     && service ssh start
 
