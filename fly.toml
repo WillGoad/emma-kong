@@ -33,7 +33,6 @@ primary_region = 'ewr'
   protocol = "tcp"
 
   [[services.ports]]
-    handlers = ["tls", "http"]
     port = 8444
 
 # Additional Kong Admin UI on port 8002
