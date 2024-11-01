@@ -17,7 +17,7 @@ COPY kong.deb /tmp/kong.deb
 
 RUN set -ex; \
     apt-get update; \
-    apt-get install -y curl openssh-server sudo; \
+    apt-get install -y curl; \
     if [ "$ASSET" = "remote" ] ; then \
       CODENAME=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d = -f 2) \
       && KONG_REPO=$(echo ${KONG_VERSION%.*} | sed 's/\.//') \
@@ -38,17 +38,13 @@ RUN set -ex; \
     && kong version \
     && apt-get purge curl -y
 
-RUN useradd -rm -d /home/srv-csfmeipu0jms73fi4u30 -s /bin/bash -g root -G sudo -u 2000 srv-csfmeipu0jms73fi4u30 \
-    && echo 'srv-csfmeipu0jms73fi4u30:password' | chpasswd \
-    && service ssh start
-
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 USER kong
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-EXPOSE 8000 8443 8001 8444 22 $EE_PORTS
+EXPOSE 8000 8443 8001 8444 $EE_PORTS
 
 STOPSIGNAL SIGQUIT
 
