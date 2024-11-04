@@ -1,10 +1,5 @@
-# fly.toml app configuration file generated for emma-kong-uezrhw on 2024-10-31T20:30:17Z
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
 app = 'emma-kong-uezrhw'
-primary_region = 'ewr'
+primary_region = 'lhr'
 
 [build]
 
