@@ -13,32 +13,6 @@ primary_region = 'lhr'
     handlers = ["tls", "http"]
     port = 443
 
-# Kong Admin API
-[[services]]
-  internal_port = 8001
-  protocol = "tcp"
-  
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 8001
-
-# Additional Kong Admin API on port 8444
-[[services]]
-  internal_port = 8444
-  protocol = "tcp"
-
-  [[services.ports]]
-    port = 8444
-
-# Additional Kong Admin UI on port 8002
-[[services]]
-  internal_port = 8002
-  protocol = "tcp"
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 8002
-
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
